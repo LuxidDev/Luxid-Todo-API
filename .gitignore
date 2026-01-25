@@ -1,0 +1,21 @@
+# Dependencies
+/vendor/
+composer.lock
+
+# Environment
+.env
+.env.production
+
+# Logs
+logs/
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
