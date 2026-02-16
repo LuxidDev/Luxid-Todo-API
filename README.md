@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://luxid-dev.netlify.app/lion7.svg" width="120" alt="Luxid Logo">
+    <img src="https://luxid.dev/lion5.svg" width="120" alt="Luxid Logo">
 </p>
 
 ## About Luxid

@@ -1,11 +1,11 @@
 <?php
 namespace App\Actions;
 
-use Luxid\Foundation\Action;
+use App\Actions\LuxidAction;
 use Luxid\Http\Request;
 use Luxid\Http\Response;
 
-class HealthCheckerAction extends Action
+class HealthCheckerAction extends LuxidAction
 {
     /**
      * Simple Health Checker Endpoint (Optional though)

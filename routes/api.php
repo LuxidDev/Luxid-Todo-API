@@ -15,7 +15,7 @@ route('todos.index')
     ->uses(TodoAction::class, 'index')
     ->open();
 
-    route('todos.show')
+route('todos.show')
     ->get('/api/todos/{id}')
     ->uses(TodoAction::class, 'show')
     ->open();

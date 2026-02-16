@@ -9,7 +9,7 @@ class WelcomeAction extends LuxidAction
     {
         return $this->nova('welcome', [
             'title' => 'Welcome to Luxid Framework',
-            'version' => '0.1.0',
+            'version' => 'v0.4.1-alpha',
             'phpVersion' => PHP_VERSION,
         ]);
     }

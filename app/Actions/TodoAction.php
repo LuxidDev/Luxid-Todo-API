@@ -2,17 +2,17 @@
 namespace App\Actions;
 
 use App\Entities\Todo;
-use Luxid\Foundation\Action;
+use App\Actions\LuxidAction;
 use Luxid\Http\Request;
 use Luxid\Http\Response;
 
-class TodoAction extends Action
+class TodoAction extends LuxidAction
 {
     /**
      * Get all todos (with optional filtering).
      * GET /api/todos
      */
-    public function index(Request $request, Response $response)  
+    public function index(Request $request, Response $response)
     {
         // Use query() for query parameters
         $status = $request->query('status');
@@ -56,7 +56,7 @@ class TodoAction extends Action
      * Get single todo by ID
      * GET /api/todos/{id}
      */
-    public function show(Request $request, Response $response, $id)
+    public function show(Response $response, $id)
     {
         // Find the todo using Active Record's find method
         $todo = Todo::find($id);
@@ -74,7 +74,7 @@ class TodoAction extends Action
      * Create new todo
      * POST /api/todos
      */
-    public function store(Request $request, Response $response)  
+    public function store(Request $request, Response $response)
     {
         // Use input() for POST body data
         $data = $request->input();
@@ -99,7 +99,7 @@ class TodoAction extends Action
      * Update todo
      * PUT /api/todos/{id}
      */
-    public function update(Request $request, Response $response, $id)  
+    public function update(Request $request, Response $response, $id)
     {
         // Find the todo
         $todo = Todo::find($id);
