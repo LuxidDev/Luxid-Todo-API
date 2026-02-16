@@ -3,8 +3,8 @@ namespace App\Actions;
 
 use App\Entities\Todo;
 use App\Actions\LuxidAction;
-use Luxid\Http\Request;
-use Luxid\Http\Response;
+use Luxid\Nodes\Request;
+use Luxid\Nodes\Response;
 
 class TodoAction extends LuxidAction
 {
@@ -12,11 +12,11 @@ class TodoAction extends LuxidAction
      * Get all todos (with optional filtering).
      * GET /api/todos
      */
-    public function index(Request $request, Response $response)
+    public function index()
     {
         // Use query() for query parameters
-        $status = $request->query('status');
-        $search = $request->query('search');
+        $status = Request::query('status');
+        $search = Request::query('search');
 
         // Build where conditions
         $where = [];
@@ -42,7 +42,7 @@ class TodoAction extends LuxidAction
         }, $todos);
 
         // Use response() helper to get Response instance
-        return $response->success([
+        return Response::success([
             'todos' => $data,
             'count' => count($data),
             'meta' => [
@@ -56,16 +56,16 @@ class TodoAction extends LuxidAction
      * Get single todo by ID
      * GET /api/todos/{id}
      */
-    public function show(Response $response, $id)
+    public function show($id)
     {
         // Find the todo using Active Record's find method
         $todo = Todo::find($id);
 
         if (!$todo) {
-            return $response->error("Todo with ID $id not found", null, 404);
+            return Response::error("Todo with ID $id not found", null, 404);
         }
 
-        return $response->success([
+        return Response::success([
             'todo' => $todo->toArray()
         ]);
     }
@@ -74,10 +74,10 @@ class TodoAction extends LuxidAction
      * Create new todo
      * POST /api/todos
      */
-    public function store(Request $request, Response $response)
+    public function store()
     {
         // Use input() for POST body data
-        $data = $request->input();
+        $data = Request::input();
 
         // Create new Todo entity
         $todo = new Todo();
@@ -85,83 +85,83 @@ class TodoAction extends LuxidAction
 
         // Validate and save
         if ($todo->validate() && $todo->save()) {
-            return $response->success([
+            return Response::success([
                 'todo' => $todo->toArray(),
                 'message' => 'Todo created successfully'
             ], 201);
         }
 
         // Return validation errors
-        return $response->error('Validation failed', $todo->errors, 422);
+        return Response::error('Validation failed', $todo->errors, 422);
     }
 
     /**
      * Update todo
      * PUT /api/todos/{id}
      */
-    public function update(Request $request, Response $response, $id)
+    public function update($id)
     {
         // Find the todo
         $todo = Todo::find($id);
 
         if (!$todo) {
-            return $response->error("Todo with ID $id not found", null, 404);
+            return Response::error("Todo with ID $id not found", null, 404);
         }
 
         // Use input() for PUT body data (better than getBody())
-        $data = $request->input();
+        $data = Request::input();
 
         // Update the entity
         $todo->loadData($data);
 
         if ($todo->validate() && $todo->update()) {
-            return $response->success([
+            return Response::success([
                 'todo' => $todo->toArray(),
                 'message' => 'Todo updated successfully'
             ]);
         }
 
-        return $response->error('Validation failed', $todo->errors, 422);
+        return Response::error('Validation failed', $todo->errors, 422);
     }
 
     /**
      * Delete todo
      * DELETE /api/todos/{id}
      */
-    public function destroy(Request $request, Response $response, $id)
+    public function destroy($id)
     {
         // Find the todo
         $todo = Todo::find($id);
 
         if (!$todo) {
-            return $response->error("Todo with ID $id not found", null, 404);
+            return Response::error("Todo with ID $id not found", null, 404);
         }
 
         if ($todo->delete()) {
-            return $response->success([
+            return Response::success([
                 'message' => 'Todo deleted successfully'
             ]);
         }
 
-        return $response->error('Failed to delete todo', null, 500);
+        return Response::error('Failed to delete todo', null, 500);
     }
 
     /**
      * Bulk update status
      * PATCH /api/todos/bulk-status
      */
-    public function bulkUpdateStatus(Request $request, Response $response)
+    public function bulkUpdateStatus()
     {
         // Use input() for PATCH body data
-        $data = $request->input();
+        $data = Request::input();
 
         if (!isset($data['todo_ids']) || !is_array($data['todo_ids']) || !isset($data['status'])) {
-            return $response->error('Missing todo_ids array or status', null, 400);
+            return Response::error('Missing todo_ids array or status', null, 400);
         }
 
         $status = $data['status'];
         if (!in_array($status, ['pending', 'in_progress', 'completed'])) {
-            return $response->error('Invalid status value', null, 400);
+            return Response::error('Invalid status value', null, 400);
         }
 
         $updatedCount = 0;
@@ -175,7 +175,7 @@ class TodoAction extends LuxidAction
             }
         }
 
-        return $response->success([
+        return Response::success([
             'message' => "Updated {$updatedCount} todos",
             'updated_count' => $updatedCount
         ]);
